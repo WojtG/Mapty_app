@@ -35,13 +35,11 @@ body {
   display: flex;
 }
 
-/* GENERAL */
 a:link,
 a:visited {
   color: var(--color-brand--1);
 }
 
-/* SIDEBAR */
 .sidebar {
   flex-basis: 50rem;
   background-color: var(--color-dark--1);
@@ -119,12 +117,9 @@ a:visited {
   border-radius: 5px;
   padding: 1.5rem 2.75rem;
   margin-bottom: 1.75rem;
-
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem 2.5rem;
-
-  /* Match height and activity boxes */
   height: 9.25rem;
   transition: all 0.5s, transform 1ms;
 }
@@ -179,14 +174,12 @@ a:visited {
   color: var(--color-light--1);
 }
 
-/* MAP */
 #map {
   flex: 1;
   height: 100%;
   background-color: var(--color-light--1);
 }
 
-/* Popup width is defined in JS using options */
 .leaflet-popup .leaflet-popup-content-wrapper {
   background-color: var(--color-dark--1);
   color: var(--color-light--2);
