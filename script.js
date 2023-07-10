@@ -78,6 +78,7 @@ class App {
 
     //Attach event handlers
     document.addEventListener('keydown', this.#reset.bind(this));
+
     form.addEventListener('submit', this.#newWorkout.bind(this));
 
     inputType.addEventListener('change', this.#toggleElevationField);
