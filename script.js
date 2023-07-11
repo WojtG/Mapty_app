@@ -326,7 +326,6 @@ class App {
 
   #reset(e) {
     if (e.key !== 'Escape') return;
-    console.log('es');
     localStorage.removeItem('workouts');
     location.reload();
   }
