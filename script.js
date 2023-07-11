@@ -45,6 +45,14 @@ class Running extends Workout {
     this.pace = this.duration / this.distance;
     return this.pace;
   }
+  static getRunning(running) {
+    return new Running(
+      running.coords,
+      running.distance,
+      running.duration,
+      running.cadence
+    );
+  }
 }
 
 class Cycling extends Workout {
@@ -59,6 +67,14 @@ class Cycling extends Workout {
   calcSpeed() {
     this.speed = this.distance / (this.duration / 60);
     return this.speed;
+  }
+  static getCycling(cycling) {
+    return new Cycling(
+      cycling.coords,
+      cycling.distance,
+      cycling.duration,
+      cycling.elevationGain
+    );
   }
 }
 
@@ -110,8 +126,11 @@ class App {
 
     this.#map.on('click', this.#showFormAndMarker.bind(this));
 
-    //TODO: FIX A PROBLEM WITH DISPLAYING POPUP AND MARKER FROM LOCAL STORAGE
-    //this.#workouts.forEach(work => this.#displayPopup());
+    this.#workouts.forEach(work => {
+      const marker = this.#getMarker(work.coords);
+      this.#displayMarker(marker);
+      this.#displayPopup(work, marker);
+    });
   }
 
   #showFormAndMarker(mapE) {
@@ -119,7 +138,9 @@ class App {
     form.classList.remove('hidden');
     inputDistance.focus();
     if (!this.#isClicked) {
-      this.#displayMarker();
+      const markerCoords = this.#getMarkerCoords();
+      this.#marker = this.#getMarker(markerCoords);
+      this.#displayMarker(this.#marker);
       this.#isClicked = true;
     }
   }
@@ -183,21 +204,27 @@ class App {
 
     this.#hideForm();
 
-    this.#displayPopup(workout);
+    this.#displayPopup(workout, this.#marker);
 
     this.#setLocalStorage();
 
     this.#isClicked = false;
   }
 
-  #displayMarker() {
-    const { lat, lng } = this.#mapEvent.latlng;
-    this.#marker = L.marker([lat, lng], { riseOnHover: true });
-    this.#marker.addTo(this.#map);
+  #getMarkerCoords() {
+    return this.#mapEvent.latlng;
   }
 
-  #displayPopup(workout) {
-    this.#marker
+  #getMarker(coords) {
+    return L.marker(coords, { riseOnHover: true });
+  }
+
+  #displayMarker(marker) {
+    marker.addTo(this.#map);
+  }
+
+  #displayPopup(workout, marker) {
+    marker
       .bindPopup(
         L.popup({
           maxWidth: 250,
@@ -285,7 +312,15 @@ class App {
   #getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
     if (!data) return;
-    this.#workouts = data;
+    const mapedData = data.map(work => {
+      if (work.type === 'running') {
+        return Running.getRunning(work);
+      }
+      if (work.type === 'cycling') {
+        return Cycling.getCycling(work);
+      }
+    });
+    this.#workouts = mapedData;
     this.#workouts.forEach(work => this.#renderWorkout(work));
   }
 
