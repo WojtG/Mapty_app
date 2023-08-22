@@ -13,4 +13,4 @@ An app that allows users to plan workouts and display them on a map. Users can s
 - add a ability to show all workouts on a map
 - add a ability to draw shapes and lines on a map
 - display a weather
-- geocode a location based on an input
+- g eocode a location based on an input
